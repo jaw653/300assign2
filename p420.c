@@ -93,9 +93,9 @@ void release_pid(int pid) {
 
 void *do_job(void *ptr) {
 	int pid = allocate_pid();
-	printf("pid is: %d\n", pid);
+	//printf("pid is: %d\n", pid);
 	sleep(rand()%5);
-	printf("sleeping...\n");
+	//printf("sleeping...\n");
 	release_pid(pid);
 
 
