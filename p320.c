@@ -40,7 +40,9 @@ int main(void) {
 	}
 
 	int pid = allocate_pid();
-	printf("pid is: %d\n", pid);
+	//printf("pid is: %d\n", pid);
+
+	release_pid(300);
 
 	return 0;
 }
