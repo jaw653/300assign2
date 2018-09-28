@@ -34,15 +34,6 @@ void release_pid(int);		// Releases a pid
 
 
 int main(void) {
-	if ( !(allocate_map()) ) {
-		perror("allocate_map() error. Exiting...\n");
-		return 0;
-	}
-
-	int pid = allocate_pid();
-	//printf("pid is: %d\n", pid);
-
-	release_pid(300);
 
 	return 0;
 }
