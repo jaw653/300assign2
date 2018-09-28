@@ -13,11 +13,6 @@
 // pthread_create(&thread0, NULL(extra attributes), entryFC, paramsForEntryFC);    -  creates new thread
 // pthread_join(thread0, NULL);      -  joins work from 
 
-/**
- * Questions:
- *		- Should sleep time actually be random? This could take a really long time...
- *
- */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,17 +38,26 @@ void release_pid(int);		// Releases a pid
 void *do_job(void *);
 
 
-int main(void) {
+int main(int argc, char *argv[]) {
+	if (argc < 2) {
+		printf("Error, command line argument required. Exiting.\n");
+		return 0;
+	}
+
+	int num_threads = atoi(argv[1]);
+
 	if ( !(allocate_map()) ) {
 		perror("allocate_map() error. Exiting...\n");
 		return 0;
 	}
+	else printf("Successfully created map.\n");
 
-	pthread_t threadArr[100];
+	/* Initializing array of threads */
+	pthread_t thread_arr[1000];
 
 	int i;
-	for (i = 0; i < 100; i++) {
-		pthread_create(&threadArr[i], NULL, (*do_job), NULL);
+	for (i = 0; i < num_threads; i++) {
+		pthread_create(&thread_arr[i], NULL, (*do_job), NULL);
 		//pthread_join(thread, NULL);
 	}
 
@@ -65,7 +69,7 @@ int allocate_map(void) {
 	bitmap = malloc(sizeof(PID) * 4700);
 
 	int i;
-	for (i = 0; i <= 4700; i++) {
+	for (i = 0; i < 4700; i++) {
 		if ( !(bitmap[i] = malloc(sizeof(PID))) )
 			return 0;
 	}
@@ -75,7 +79,7 @@ int allocate_map(void) {
 
 int allocate_pid(void) {
 	int i;
-	for (i = 0; i <= 4700; i++) {
+	for (i = 0; i < 4700; i++) {
 		if (!bitmap[i]->pid_in_use) {
 			bitmap[i]->pid_in_use = 1;
 			bitmap[i]->pid_in_use = i + 300;
@@ -93,10 +97,12 @@ void release_pid(int pid) {
 
 void *do_job(void *ptr) {
 	int pid = allocate_pid();
-	//printf("pid is: %d\n", pid);
+	printf("Allocated pid: %d\n", pid);
+	
 	sleep(rand()%5);
-	//printf("sleeping...\n");
+
 	release_pid(pid);
+	printf("Released pid %d\n", pid);
 
 
 	return ptr;
