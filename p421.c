@@ -34,6 +34,11 @@ void *find_max(void *);
 
 
 int main(int argc, char *argv[]) {
+	if (argc < 2) {
+		printf("Error, not enough command line arguments. Exiting.\n");
+		return 0;
+	}
+	
 	size = argc - 1;
 	set = malloc(sizeof(int) * size);
 
